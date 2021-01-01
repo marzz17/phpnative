@@ -128,6 +128,8 @@
         $("#inputUsername").keyup(function(){
           if ($('#inputUsername').val() == 'byruddy') {
             $('#inputPassword').val('hny2021');
+          } else {
+            $('#inputPassword').val('');
           }
         });
     });
