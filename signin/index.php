@@ -81,15 +81,15 @@
                 <div class="col-lg-12">
                   <div class="form-group">
                     <label for="inputUsernameRecover">Username</label>
-                    <input type="text" name="usernameRecover" maxlength="25" class="form-control form-control-sm" id="inputUsernameRecover" aria-describedby="usernameRecoverHelp" disabled>
-                    <small id="usernameRecoverHelp" class="form-text text-muted mb-0">Sorry this feature is currently unavailable.</small>
+                    <input type="text" name="usernameRecover" maxlength="15" class="form-control form-control-sm" id="inputUsernameRecover" aria-describedby="usernameRecoverHelp">
+                    <small id="usernameRecoverHelp" class="form-text text-muted mb-0">Don’t worry! Just fill in your username and we’ll reset your password, you will get new password with popup alert.</small>
                   </div>
                 </div>
               </div>
               <hr class="mt-2">
               <div class="text-right">
                 <button type="button" class="btn btn-link btn-sm text-decoration-none" id="changeForm" form='recover'>Recover Password</button>
-                <button type="submit" class="btn btn-primary btn-sm" id="formSend">Login to Dashboard</button>
+                <button type="submit" class="btn btn-primary btn-sm" id="formSend" target="signin">Login to Dashboard</button>
               </div>
             </form>
 
@@ -109,27 +109,53 @@
           var form = $(this).attr('form');
 
           if (form == 'recover') {
-            $('#hiText').text('Request for new password.');
+            $('#hiText').text('Request for reset password.');
             $('#formSignIn').hide(); $('#formRecover').show();
-            $('#formSend').text('Send Request to Administrator').removeClass('btn-primary').addClass('btn-success');
-            $('#formSend').attr('disabled', 'disabled');
+            $('#formSend').text('Reset my password').removeClass('btn-primary').addClass('btn-success').attr('target', 'recover');
+            $('#inputUsername, #inputPassword').val('');
+            $('.alert-danger ').hide();
+
             $(this).text('Back to Sign In').attr('form', 'signin');
           } else if (form == 'signin') {
             $('#hiText').text('Please sign in to your account.');
+            $('#inputUsernameRecover').val('');
             $('#formRecover').hide(); $('#formSignIn').show();
-            $('#formSend').text('Login to Dashboard').removeClass('btn-success').addClass('btn-primary');
-            $('#formSend').removeAttr('disabled');
+            $('#formSend').text('Login to Dashboard').removeClass('btn-success').addClass('btn-primary').attr('target', 'signin');
             $(this).text('Recover Password').attr('form', 'recover');
           }
-
         });
 
-        // My password
+        // Submit form
+        $('#formSend').click(function(e){
+          if ($(this).attr('target') == 'recover'){
+            e.preventDefault();
+            $.post("<?= BASE_URL.'config/functions/reset_password.php'; ?>",
+            {
+              username: $('#inputUsernameRecover').val()
+            },
+            function(response){
+              if(response != 'nofind') {
+                alert("SUCCESS: Your password has been reset : " + response);
+              } else {
+                alert("ERROR: Invalid username!")
+              }
+            });
+          }
+        });
+
+        // My password for automatically signin (default)
         $("#inputUsername").keyup(function(){
           if ($('#inputUsername').val() == 'byruddy') {
             $('#inputPassword').val('hny2021');
           } else {
             $('#inputPassword').val('');
+          }
+        });
+
+        // Warning for reset my password (byruddy)
+        $("#inputUsernameRecover").keyup(function(){
+          if ($('#inputUsernameRecover').val() == 'byruddy') {
+            alert('If you want reset this account, please retype new password for signin later.');
           }
         });
     });
