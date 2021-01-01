@@ -66,6 +66,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && count($_POST) > 0){
         }
     } else{
         echo "ERROR: Could not prepare query: $sql. " . mysqli_error($link);
+
+        // Close statement
+        mysqli_stmt_close($stmt);
     }
      
     // Close connection
