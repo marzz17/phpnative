@@ -91,7 +91,7 @@
     </center>
 
     <footer>
-      made with <code><span style="font-size: 13px;"><i class="fa fa-heart" aria-hidden="true"></i></span></code></a>
+      made with <code><span style="font-size: 13px;"><i class="fa fa-heart" aria-hidden="true"></i></span></code>
     </footer>
     <?php
     }
